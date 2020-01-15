@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @Transactional
@@ -19,7 +20,7 @@ public class PolishBookRepository {
         this.manager = manager1;
     }
 
-    public Optional<PolishBook> getById(final Long id) {
+    public Optional<PolishBook> getById(final UUID id) {
         return Optional.ofNullable(manager.find(PolishBook.class, id));
     }
 
@@ -37,7 +38,7 @@ public class PolishBookRepository {
         return manager.merge(changedBook);
     }
 
-    public void deleteById(final Long id) {
+    public void deleteById(final UUID id) {
         manager.createQuery("delete from polish_book pb where  pb.id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
@@ -55,5 +56,11 @@ public class PolishBookRepository {
         return manager.createQuery("select pb from  polish_book  pb where  pb.title like :title")
                 .setParameter("title", '%' + title + '%')
                 .getResultList();
+    }
+
+    //todo: napisac query
+    public Optional<PolishBook> findByAuthorAndTitle(final PolishBook book) {
+
+        return null;
     }
 }
