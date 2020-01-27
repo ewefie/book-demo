@@ -2,6 +2,7 @@ package com.example.booksdemo.service;
 
 import com.example.booksdemo.exceptions.BookAlreadyExistsException;
 import com.example.booksdemo.exceptions.BookNotFoundException;
+import com.example.booksdemo.model.BookForm;
 import com.example.booksdemo.model.PolishBook;
 import com.example.booksdemo.model.PolishBooks;
 import com.example.booksdemo.repository.PolishBookRepository;
@@ -20,17 +21,22 @@ public class PolishBookService {
         this.repository = repository;
     }
 
-    public PolishBook create(final PolishBook book) {
-        throwIfGivenBookExist(book);
-        return repository.create(book);
+    public PolishBook create(final BookForm form) {
+        PolishBook bookToAdd = new PolishBook();
+        bookToAdd.setAuthor(form.getAuthor());
+        bookToAdd.setIsbn(form.getIsbn());
+        bookToAdd.setTitle(form.getTitle());
+        bookToAdd.setPagesNum(form.getPageNum());
+        //        throwIfGivenBookExist(book);
+        return repository.create(bookToAdd);
     }
 
-    private void throwIfGivenBookExist(PolishBook book) {
-        repository.findByAuthorAndTitle(book)
-                .ifPresent(pb -> {
-                    throw new BookAlreadyExistsException("Book with given author and title already exists");
-                });
-    }
+//    private void throwIfGivenBookExist(PolishBook book) {
+//        repository.findByAuthorAndTitle(book.getAuthor(),book.getTitle())
+//                .ifPresent(pb -> {
+//                    throw new BookAlreadyExistsException("Book with given author and title already exists");
+//                });
+//    }
 
     public PolishBooks findAllBooks() {
         return new PolishBooks(repository.getAll());
@@ -39,9 +45,9 @@ public class PolishBookService {
     public PolishBook update(final PolishBook givenBook, final UUID id) {
         final PolishBook bookToUpdate = findExistingById(id);
         if (!bookToUpdate.getAuthor().equals(givenBook.getAuthor()) || !bookToUpdate.getTitle().equals(givenBook.getTitle())) {
-            throwIfGivenBookExist(givenBook);
+//            throwIfGivenBookExist(givenBook);
         }
-        givenBook.setId(id);
+//        givenBook.setId(id);
         return repository.update(givenBook);
     }
 
@@ -61,5 +67,17 @@ public class PolishBookService {
     public void deleteById(final UUID id) {
         findExistingById(id);
         repository.deleteById(id);
+    }
+
+    public List<PolishBook> findByTitle(final String title) {
+        return repository.getByTitle(title);
+    }
+
+    public List<PolishBook> findByAuthor(final String author) {
+        return repository.getByAuthor(author);
+    }
+
+    public List<PolishBook> findByAuthorAndTitle(final String author, final String title) {
+        return repository.findByAuthorAndTitle(author, title);
     }
 }

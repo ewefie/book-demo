@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+<body>
+<th:block th:replace="fragments :: navigator"/>
+<br>
+<br>
+
+<div class="container container-sm">
+    <form>
+        <div class="form-group input-group-sm">
+            <label>Search by author:</label>
+            <input class="form-control" type="text" id="author" th:value="${author}">
+        </div>
+        <div class="form-group input-group-sm">
+            <label>Search by title:</label>
+            <input class="form-control" type="text" id="title" th:value="${title}">
+        </div>
+        <button class=" btn btn-outline-primary btn-sm" id="searchBtn">Search</button>
+    </form>
+</div>
+<br>
+<br>
+<div>
+    <div th:if="(${author}!=null or ${title}!=null) and(${author}!='' or ${title}!='')" th:text="'Search results for:'">
+    </div>
+    <br>
+    <div th:if="${author}!=null and ${author}!=''" th:text="Author+ ': '+ ${author}">
+    </div>
+    <br>
+    <div th:if="${title}!=null and ${title}!=''" th:text="Title + ': '+${title}">
+    </div>
+</div>
+<br>
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th>Lp.</th>
+        <th>Author</th>
+        <th>Title</th>
+        <th>Number of pages</th>
+        <th>ISBN</th>
+        <th></th><!--        buttons-->
+    </thead>
+    <tbody>
+    <tr th:each="pb,loop : ${books}">
+        <td th:text="${loop.index}"></td>
+        <td th:text="${pb.getAuthor()}"></td>
+        <td th:text="${pb.getTitle()}"></td>
+        <td th:text="${pb.getPagesNum()}"></td>
+        <td th:text="${pb.getIsbn()}"></td>
+        <td>
+            <div class="btn-group" role="group">
+                <a class="btn btn-sm btn-outline-primary" th:href="@{'/api/books/edit'+ ${pb.getId()}}">Edit</a>
+                <a class="btn btn-sm btn-outline-danger" th:href="@{'/api/books/delete/'+${pb.getId()}}">Delete</a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+<script>
+    let btn = document.getElementById("searchBtn");
+    btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        let author = document.getElementById("author").value;
+        let title = document.getElementById("title").value;
+        let url = `http://localhost:9292/api/books/list?author=${author}&title=${title}`;
+        console.log(url);
+        window.parent.location.replace(url);
+
+    });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</html>

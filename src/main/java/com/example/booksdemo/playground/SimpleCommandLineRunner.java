@@ -2,6 +2,7 @@ package com.example.booksdemo.playground;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Profile("h1")
 @Component
 public class SimpleCommandLineRunner implements CommandLineRunner {
     private final SimpleBean simpleBean;

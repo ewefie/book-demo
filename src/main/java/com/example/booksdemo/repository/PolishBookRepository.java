@@ -26,7 +26,7 @@ public class PolishBookRepository {
 
     @SuppressWarnings("unchecked")
     public List<PolishBook> getAll() {
-        return manager.createQuery("select pb from polish_book pb").getResultList();
+        return manager.createQuery("select pb from polish_books pb").getResultList();
     }
 
     public PolishBook create(final PolishBook polishBook) {
@@ -39,28 +39,30 @@ public class PolishBookRepository {
     }
 
     public void deleteById(final UUID id) {
-        manager.createQuery("delete from polish_book pb where  pb.id = :id")
+        manager.createQuery("delete from polish_books pb where  pb.id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
     }
 
     @SuppressWarnings("unchecked")
     public List<PolishBook> getByAuthor(final String author) {
-        return manager.createQuery("select pb from  polish_book  pb where  pb.author like :author")
+        return manager.createQuery("select pb from  polish_books  pb where  pb.author like :author")
                 .setParameter("author", '%' + author + '%')
                 .getResultList();
     }
 
     @SuppressWarnings("unchecked")
     public List<PolishBook> getByTitle(final String title) {
-        return manager.createQuery("select pb from  polish_book  pb where  pb.title like :title")
+        return manager.createQuery("select pb from  polish_books  pb where  pb.title like :title")
                 .setParameter("title", '%' + title + '%')
                 .getResultList();
     }
 
-    //todo: napisac query
-    public Optional<PolishBook> findByAuthorAndTitle(final PolishBook book) {
-
-        return null;
+    @SuppressWarnings("unchecked")
+    public List<PolishBook> findByAuthorAndTitle(final String author, final String title) {
+        return manager.createQuery("select pb from  polish_books  pb where  pb.title like :title and pb.author like :author")
+                .setParameter("title", '%' + title + '%')
+                .setParameter("author", '%' + author + '%')
+                .getResultList();
     }
 }
